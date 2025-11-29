@@ -29,4 +29,87 @@ public class TextEditorV2 {
         redoStack.clear();
     }
 
+    //show 
+    public void show() {
+        if (lines.isEmpty()) {
+            System.out.println("Document is empty.");
+            return;
+        }
+
+        for (int i = 0; i < lines.size(); i++) {
+            System.out.println((i + 1) + ": " + lines.get(i));
+        }
+    }
+
+    //insert 
+    public void insert(int lineNumber, String text) {
+        if (lineNumber < 1 || lineNumber > lines.size() + 1) {
+            System.out.println("Invalid line number.");
+            return;
+        }
+
+        int index = lineNumber - 1;
+        lines.add(index, text);
+
+        Command cmd = new Command("insert", text, index);
+        undoStack.push(cmd);
+        redoStack.clear(); 
+    }
+
+    //delete 
+    public void delete(int lineNumber) {
+        if (lineNumber < 1 || lineNumber > lines.size()){
+            System.out.println("Invalid line number.");
+            return;
+        }
+
+        int index = lineNumber - 1;
+
+        String deletedLine = lines.get(index);
+        lines.remove(index);
+
+        Command cmd = new Command("delete", deletedLine, index);
+        undoStack.push(cmd);
+
+        redoStack.clear();
+    }
+
+    //undo
+    public void undo() {
+        if (undoStack.isEmpty()) {
+            System.out.println("Nothing to undo.");
+            return;
+        }
+
+        Command cmd = undoStack.pop();
+        String action = cmd.getAction();
+        String data = cmd.getData();
+        int index = cmd.getLineNumber();
+
+        switch (action) {
+            case "append":
+            case "insert":
+                if (index >= 0 && index < lines.size()){
+                    lines.remove(index);
+                }
+                break;
+            case "delete":
+            if (index >= 0 && index <= lines.size()) {
+                lines.add(index, data);
+            }
+                break;
+            // case "edit":
+            // if (index >= 0 && index < lines.size()) {
+            //     lines.set(index, data);
+            // }
+            // break;
+         
+            default:
+            System.out.println("Unknown action: " + action);
+            return;
+        }
+
+        redoStack.push(cmd);
+    }
+
 }
