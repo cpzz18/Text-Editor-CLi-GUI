@@ -6,37 +6,34 @@ import java.util.Stack;
 public class Calculator {
 
     static double currentValue = 0;
-
     static Stack<String> undoStack = new Stack<>();
     static Stack<String> redoStack = new Stack<>();
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
-        System.out.println("=== Sistem Perhitungan ===");
+
+        printWelcome();
+        showHelp();
 
         while (true) {
-            System.out.print("> ");
+            System.out.print("\n> ");
             String command = input.nextLine().trim();
 
+            if (command.isEmpty()) {
+                continue;
+            }
+
             if (command.startsWith("add")) {
-                double n = Double.parseDouble(command.split(" ")[1]);
-                doOperation("ADD", n);
+                handleOperation(command, "ADD");
 
             } else if (command.startsWith("sub")) {
-                double n = Double.parseDouble(command.split(" ")[1]);
-                doOperation("SUB", n);
+                handleOperation(command, "SUB");
 
             } else if (command.startsWith("mul")) {
-                double n = Double.parseDouble(command.split(" ")[1]);
-                doOperation("MUL", n);
+                handleOperation(command, "MUL");
 
             } else if (command.startsWith("div")) {
-                double n = Double.parseDouble(command.split(" ")[1]);
-                if (n == 0) {
-                    System.out.println("Tidak bisa membagi dengan 0.");
-                    continue;
-                }
-                doOperation("DIV", n);
+                handleOperation(command, "DIV");
 
             } else if (command.equals("undo")) {
                 undoOperation();
@@ -55,23 +52,47 @@ public class Calculator {
                 undoStack.clear();
                 redoStack.clear();
                 System.out.println("Calculator telah di-reset ke 0.");
+
             } else if (command.equals("help")) {
                 showHelp();
             }
 
             else if (command.equals("exit")) {
-                System.out.println("Keluar...");
+                System.out.println("Terima kasih telah menggunakan kalkulator. Sampai jumpa!");
                 break;
 
             } else {
-                System.out.println("Perintah tidak dikenal!");
+                System.out.println("Perintah tidak dikenal: '" + command + "'. Ketik 'help' untuk daftar perintah.");
             }
         }
 
         input.close();
     }
 
+    static void handleOperation(String command, String op) {
+        String[] parts = command.split(" ");
+        if (parts.length < 2) {
+            System.out.println("Penggunaan: " + op.toLowerCase() + " <angka>");
+            return;
+        }
+
+        try {
+            double value = Double.parseDouble(parts[1]);
+
+            if (op.equals("DIV") && value == 0) {
+                System.out.println("Error: Tidak bisa membagi dengan 0.");
+                return;
+            }
+
+            doOperation(op, value);
+        } catch (NumberFormatException e) {
+            System.out.println("Error: Input harus berupa angka.");
+        }
+    }
+
     static void doOperation(String op, double value) {
+        double oldValue = currentValue;
+
         switch (op) {
             case "ADD":
                 currentValue += value;
@@ -90,7 +111,7 @@ public class Calculator {
         undoStack.push(op + " " + value);
         redoStack.clear();
 
-        System.out.println("OK. Hasil sekarang: " + currentValue);
+        System.out.println("Operasi berhasil: " + oldValue + " " + getSymbol(op) + " " + value + " = " + currentValue);
     }
 
     static void undoOperation() {
@@ -146,14 +167,57 @@ public class Calculator {
 
     static void showHistory() {
         if (undoStack.isEmpty()) {
-            System.out.println("History kosong.");
+            System.out.println("Riwayat kosong.");
             return;
         }
 
-        System.out.println("Riwayat operasi:");
+        System.out.println("\n=== Riwayat Operasi ===");
+        double tempValue = 0;
+        int num = 1;
+        
         for (String op : undoStack) {
-            System.out.println(" - " + op);
+            String[] parts = op.split(" ");
+            String cmd = parts[0];
+            double value = Double.parseDouble(parts[1]);
+            
+            double before = tempValue;
+            
+            switch (cmd) {
+                case "ADD":
+                    tempValue += value;
+                    break;
+                case "SUB":
+                    tempValue -= value;
+                    break;
+                case "MUL":
+                    tempValue *= value;
+                    break;
+                case "DIV":
+                    tempValue /= value;
+                    break;
+            }
+            
+            System.out.println(num + ". " + before + " " + getSymbol(cmd) + " " + value + " = " + tempValue);
+            num++;
         }
+        System.out.println("=======================");
+    }
+
+    static String getSymbol(String op) {
+        switch (op) {
+            case "ADD": return "+";
+            case "SUB": return "-";
+            case "MUL": return "×";
+            case "DIV": return "÷";
+            default: return "?";
+        }
+    }
+
+    static void printWelcome() {
+        System.out.println("\n╔═══════════════════════════════════════╗");
+        System.out.println("║    KALKULATOR V1 - VERSI CLI          ║");
+        System.out.println("║       Demo Stack (Undo/Redo)         ║");
+        System.out.println("╚════════════════════════════════════════╝");
     }
 
     static void showHelp() {
