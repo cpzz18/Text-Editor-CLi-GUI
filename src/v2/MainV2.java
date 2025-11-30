@@ -21,8 +21,6 @@ public class MainV2 {
                 continue;
             }
 
-            // Split input:"command arg1 arg2..."
-
             String[] parts = input.split(" ", 2);
             String command = parts[0].toLowerCase();
 
@@ -149,10 +147,9 @@ public class MainV2 {
     }
 
     static void printWelcome() {
-        System.out.println("\n╔════════════════════════════════════════╗");
-        System.out.println("║     TEXT EDITOR V2 - CLI VERSION      ║");
-        System.out.println("║  Stack + LinkedList + Queue Demo     ║");
-        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println("\n============================================");
+        System.out.println("          TEXT EDITOR - CLI VERSION          ");
+        System.out.println("============================================");
     }
 
     static void printHelp() {

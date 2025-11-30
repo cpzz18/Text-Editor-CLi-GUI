@@ -3,7 +3,7 @@ package v1;
 import java.util.Scanner;
 import java.util.Stack;
 
-public class stack {
+public class Calculator {
 
     static double currentValue = 0;
 
@@ -55,8 +55,11 @@ public class stack {
                 undoStack.clear();
                 redoStack.clear();
                 System.out.println("Calculator telah di-reset ke 0.");
+            } else if (command.equals("help")) {
+                showHelp();
+            }
 
-            } else if (command.equals("exit")) {
+            else if (command.equals("exit")) {
                 System.out.println("Keluar...");
                 break;
 
@@ -112,11 +115,9 @@ public class stack {
         String op = redoStack.pop();
         undoStack.push(op);
 
-        String[] parts = op.split(" ");
-        String cmd = parts[0];
-        double value = Double.parseDouble(parts[1]);
+        recompute();
+        System.out.println("Redo berhasil. Hasil sekarang: " + currentValue);
 
-        doOperation(cmd, value);
     }
 
     static void recompute() {
@@ -154,4 +155,21 @@ public class stack {
             System.out.println(" - " + op);
         }
     }
+
+    static void showHelp() {
+        System.out.println("\n=== COMMANDS ===");
+        System.out.println("add <number>    - Tambah");
+        System.out.println("sub <number>    - Kurang");
+        System.out.println("mul <number>    - Kali");
+        System.out.println("div <number>    - Bagi");
+        System.out.println("undo            - Batalkan operasi");
+        System.out.println("redo            - Ulangi operasi");
+        System.out.println("result          - Tampilkan hasil");
+        System.out.println("history         - Tampilkan riwayat");
+        System.out.println("clear           - Reset ke 0");
+        System.out.println("help            - Tampilkan menu ini");
+        System.out.println("exit            - Keluar");
+        System.out.println("================");
+    }
+
 }
