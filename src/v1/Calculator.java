@@ -174,14 +174,14 @@ public class Calculator {
         System.out.println("\n=== Riwayat Operasi ===");
         double tempValue = 0;
         int num = 1;
-        
+
         for (String op : undoStack) {
             String[] parts = op.split(" ");
             String cmd = parts[0];
             double value = Double.parseDouble(parts[1]);
-            
+
             double before = tempValue;
-            
+
             switch (cmd) {
                 case "ADD":
                     tempValue += value;
@@ -196,7 +196,7 @@ public class Calculator {
                     tempValue /= value;
                     break;
             }
-            
+
             System.out.println(num + ". " + before + " " + getSymbol(cmd) + " " + value + " = " + tempValue);
             num++;
         }
@@ -205,35 +205,43 @@ public class Calculator {
 
     static String getSymbol(String op) {
         switch (op) {
-            case "ADD": return "+";
-            case "SUB": return "-";
-            case "MUL": return "×";
-            case "DIV": return "÷";
-            default: return "?";
+            case "ADD":
+                return "+";
+            case "SUB":
+                return "-";
+            case "MUL":
+                return "×";
+            case "DIV":
+                return "÷";
+            default:
+                return "?";
         }
     }
 
     static void printWelcome() {
-        System.out.println("\n╔═══════════════════════════════════════╗");
-        System.out.println("║    KALKULATOR V1 - VERSI CLI          ║");
-        System.out.println("║       Demo Stack (Undo/Redo)         ║");
-        System.out.println("╚════════════════════════════════════════╝");
+        System.out.println("\n┌─────────────────────────────────────────────────────────────┐");
+        System.out.println("│                  KALKULATOR CLI - UNDO/REDO                 │");
+        System.out.println("└─────────────────────────────────────────────────────────────┘\n");
     }
+    
+    
 
     static void showHelp() {
-        System.out.println("\n=== COMMANDS ===");
-        System.out.println("add <number>    - Tambah");
-        System.out.println("sub <number>    - Kurang");
-        System.out.println("mul <number>    - Kali");
-        System.out.println("div <number>    - Bagi");
-        System.out.println("undo            - Batalkan operasi");
-        System.out.println("redo            - Ulangi operasi");
-        System.out.println("result          - Tampilkan hasil");
-        System.out.println("history         - Tampilkan riwayat");
-        System.out.println("clear           - Reset ke 0");
-        System.out.println("help            - Tampilkan menu ini");
-        System.out.println("exit            - Keluar");
-        System.out.println("================");
+        System.out.println("\n┌─────────────────────── COMMAND LIST ────────────────────────┐");
+        System.out.println("│  add <number>     →  Tambah angka                           │");
+        System.out.println("│  sub <number>     →  Kurangi angka                          │");
+        System.out.println("│  mul <number>     →  Kali angka                             │");
+        System.out.println("│  div <number>     →  Bagi angka                             │");
+        System.out.println("│                                                             │");
+        System.out.println("│  undo              →  Batalkan operasi terakhir             │");
+        System.out.println("│  redo              →  Ulangi operasi yang dibatalkan        │");
+        System.out.println("│                                                             │");
+        System.out.println("│  result            →  Lihat hasil sekarang                  │");
+        System.out.println("│  history           →  Lihat riwayat operasi                 │");
+        System.out.println("│  clear             →  Reset kalkulator ke 0                 │");
+        System.out.println("│  help              →  Tampilkan daftar perintah             │");
+        System.out.println("│  exit              →  Keluar dari aplikasi                  │");
+        System.out.println("└─────────────────────────────────────────────────────────────┘");
     }
 
 }
