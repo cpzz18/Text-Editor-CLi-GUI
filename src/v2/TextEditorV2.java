@@ -1,8 +1,15 @@
 package v2;
 
 import shared.Command;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.Stack;
+import java.io.FileWriter;
+import java.io.FileReader;
 
 import java.util.Queue;
 
@@ -126,11 +133,19 @@ public class TextEditorV2 {
                 }
                 System.out.println("Undo berhasil: Mengembalikan baris yang dihapus pada baris " + (index + 1));
                 break;
-            // case "edit":
-            // if (index >= 0 && index < lines.size()) {
-            // lines.set(index, data);
-            // }
-            // break;
+            case "load":
+                if (data != null && !data.isEmpty()) {
+                    String[] restoredLines = data.split("\n", -1);
+                    lines.clear();
+                    for (String line : restoredLines) {
+                        lines.add(line);
+                    }
+                } else {
+                    lines.clear();
+                }
+                System.out.println("Undo berhasil: Mengembalikan dokumen sebelum load");
+                break;
+
             case "clear":
                 if (data != null && !data.isEmpty()) {
                     String[] restoredLines = data.split("\n");
@@ -175,11 +190,6 @@ public class TextEditorV2 {
                 }
                 System.out.println("Redo berhasil: Menghapus kembali baris " + (index + 1));
                 break;
-            // case "edit":
-            // if (index >= 0 && index < lines.size()) {
-            // lines.set(index, data);
-            // }
-            // break;
             case "clear":
                 lines.clear();
                 System.out.println("Redo berhasil: Menghapus semua baris kembali");
@@ -269,6 +279,53 @@ public class TextEditorV2 {
             num++;
         }
         System.out.println("Total: " + clipboardQueue.size() + "/" + MAX_CLIPBOARD_SIZE + " item.");
+    }
+
+    public void save(String filename) {
+        if (lines.isEmpty()) {
+            System.out.println("Dokumen kosong, tidak ada yang disimpan.");
+            return;
+        }
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            for (int i = 0; i < lines.size(); i++) {
+                writer.write(lines.get(i));
+                if (i < lines.size() - 1) {
+                    writer.newLine();
+                }
+            }
+            System.out.println("Berhasil menyimpan " + lines.size() + " baris ke file: " + filename);
+        } catch (IOException e) {
+            System.out.println("Error saat menyimpan file: " + e.getMessage());
+        }
+
+    }
+
+    public void load(String filename) {
+        File file = new File(filename);
+
+        if (!file.exists()) {
+            System.out.println("Error: File tidak ditemukan: " + filename);
+            return;
+        }
+        if (!lines.isEmpty()) {
+            Command cmd = new Command("load", String.join("\n", lines), 0);
+            undoStack.push(cmd);
+            redoStack.clear();
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            lines.clear();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+
+            System.out.println("Berhasil memuat " + lines.size() + " baris dari file: " + filename);
+        } catch (IOException e) {
+            System.out.println("Error saat membaca file: " + e.getMessage());
+        }
     }
 
 }

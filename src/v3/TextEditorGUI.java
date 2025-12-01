@@ -5,6 +5,7 @@ import java.util.Queue;
 import java.util.Stack;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -17,6 +18,12 @@ import javax.swing.SwingUtilities;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.awt.Dimension;
 
 import javax.swing.JScrollPane;
@@ -24,9 +31,8 @@ import javax.swing.BorderFactory;
 
 import shared.Command;
 
-
 public class TextEditorGUI extends JFrame {
-    
+
     private LinkedList<String> lines;
     private Stack<Command> undoStack;
     private Stack<Command> redoStack;
@@ -106,6 +112,18 @@ public class TextEditorGUI extends JFrame {
         JButton btnShowClipboard = new JButton("📑 Clipboard");
         btnShowClipboard.addActionListener(e -> showClipboard());
         panel.add(btnShowClipboard);
+
+        panel.add(new JSeparator(SwingConstants.VERTICAL));
+
+        // Save Button
+        JButton btnSave = new JButton("💾 Save");
+        btnSave.addActionListener(e -> saveToFile());
+        panel.add(btnSave);
+
+        // Load Button
+        JButton btnLoad = new JButton("📁 Load");
+        btnLoad.addActionListener(e -> loadFromFile());
+        panel.add(btnLoad);
 
         return panel;
     }
@@ -350,4 +368,104 @@ public class TextEditorGUI extends JFrame {
         updateStatus();
     }
 
+    private void saveToFile() {
+        if (textArea.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Dokumen kosong, tidak ada yang disimpan.",
+                    "Info",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Simpan Dokumen");
+
+        int userSelection = fileChooser.showSaveDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileToSave))) {
+                syncToLinkedList();
+
+                for (int i = 0; i < lines.size(); i++) {
+                    writer.write(lines.get(i));
+                    if (i < lines.size() - 1) {
+                        writer.newLine();
+                    }
+                }
+
+                JOptionPane.showMessageDialog(this,
+                        "Berhasil menyimpan " + lines.size() + " baris ke:\n" + fileToSave.getAbsolutePath(),
+                        "Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Error saat menyimpan file:\n" + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
+
+    private void loadFromFile() {
+        if (!textArea.getText().isEmpty()) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    "Dokumen saat ini akan ditimpa. Lanjutkan?",
+                    "Konfirmasi Load",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Buka Dokumen");
+
+        int userSelection = fileChooser.showOpenDialog(this);
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToOpen = fileChooser.getSelectedFile();
+
+            if (!fileToOpen.exists()) {
+                JOptionPane.showMessageDialog(this,
+                        "File tidak ditemukan: " + fileToOpen.getName(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (!lines.isEmpty()) {
+                Command cmd = createSnapshot("load");
+                undoStack.push(cmd);
+                redoStack.clear();
+            }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(fileToOpen))) {
+                lines.clear();
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    lines.add(line);
+                }
+
+                syncFromLinkedList();
+                updateStatus();
+
+                JOptionPane.showMessageDialog(this,
+                        "Berhasil memuat " + lines.size() + " baris dari:\n" + fileToOpen.getAbsolutePath(),
+                        "Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
+
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Error saat membaca file:\n" + e.getMessage(),
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
+    }
 }

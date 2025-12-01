@@ -41,6 +41,10 @@ public class MainV2 {
                     editor.show();
                     break;
 
+                case "undo":
+                    editor.undo();
+                    break;
+
                 case "redo":
                     editor.redo();
                     break;
@@ -61,6 +65,14 @@ public class MainV2 {
                     editor.showClipboard();
                     break;
 
+                case "save":
+                    handleSave(parts);
+                    break;
+
+                case "load":
+                    handleLoad(parts);
+                    break;
+
                 case "help":
                     printHelp();
                     break;
@@ -70,7 +82,8 @@ public class MainV2 {
                     scanner.close();
                     return;
                 default:
-                    System.out.println("Perintah tidak dikenal: '" + command + "'. Ketik 'help' untuk daftar perintah.");
+                    System.out
+                            .println("Perintah tidak dikenal: '" + command + "'. Ketik 'help' untuk daftar perintah.");
             }
         }
     }
@@ -146,6 +159,25 @@ public class MainV2 {
         }
     }
 
+    static void handleSave(String[] parts) {
+        if (parts.length < 2) {
+            System.out.println("Penggunaan: save <name_file>");
+            return;
+        }
+
+        String filename = parts[1];
+        editor.save(filename);
+    }
+
+    static void handleLoad(String[] parts) {
+        if (parts.length < 2) {
+            System.out.println("Penggunaan: load <nama_file>");
+            return;
+        }
+        String filename = parts[1];
+        editor.load(filename);
+    }
+
     static void printWelcome() {
         System.out.println("\n============================================");
         System.out.println("          TEXT EDITOR - CLI VERSION          ");
@@ -164,6 +196,8 @@ public class MainV2 {
         System.out.println("copy <baris>            - Salin baris ke clipboard");
         System.out.println("paste <baris>           - Tempel dari clipboard (FIFO)");
         System.out.println("clipboard               - Lihat riwayat clipboard");
+        System.out.println("save                    - Simpan ke file");
+        System.out.println("load                    - Muat ke file");
         System.out.println("help                    - Tampilkan menu ini");
         System.out.println("exit                    - Keluar dari program");
         System.out.println("==============================");
