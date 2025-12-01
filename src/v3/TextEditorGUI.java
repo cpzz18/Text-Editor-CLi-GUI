@@ -1,34 +1,48 @@
 package v3;
 
-import shared.Command;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JSeparator;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Dimension;
+
+import javax.swing.JScrollPane;
+import javax.swing.BorderFactory;
+
+import shared.Command;
+
+
 public class TextEditorGUI extends JFrame {
-    // Data Structures
+    
     private LinkedList<String> lines;
     private Stack<Command> undoStack;
     private Stack<Command> redoStack;
     private Queue<String> clipboardQueue;
     private static final int MAX_CLIPBOARD = 5;
 
-    // GUI Components
     private JTextArea textArea;
     private JButton btnUndo, btnRedo, btnCopy, btnPaste, btnClear;
     private JLabel statusLabel;
 
     public TextEditorGUI() {
-        // Initialize data structures
         lines = new LinkedList<>();
         undoStack = new Stack<>();
         redoStack = new Stack<>();
         clipboardQueue = new LinkedList<>();
 
-        // Setup GUI
         setupGUI();
         updateStatus();
     }
@@ -39,14 +53,11 @@ public class TextEditorGUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Main layout
         setLayout(new BorderLayout());
 
-        // 1. Toolbar (North)
         JPanel toolbar = createToolbar();
         add(toolbar, BorderLayout.NORTH);
 
-        // 2. Text Area (Center)
         textArea = new JTextArea();
         textArea.setFont(new Font("Monospaced", Font.PLAIN, 14));
         textArea.setLineWrap(true);
@@ -54,7 +65,6 @@ public class TextEditorGUI extends JFrame {
         JScrollPane scrollPane = new JScrollPane(textArea);
         add(scrollPane, BorderLayout.CENTER);
 
-        // 3. Status Bar (South)
         statusLabel = new JLabel("Baris: 0 | Karakter: 0 | Clipboard: 0/5");
         statusLabel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         add(statusLabel, BorderLayout.SOUTH);
