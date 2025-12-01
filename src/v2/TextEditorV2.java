@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.io.FileWriter;
@@ -134,18 +135,13 @@ public class TextEditorV2 {
                 System.out.println("Undo berhasil: Mengembalikan baris yang dihapus pada baris " + (index + 1));
                 break;
             case "load":
+                lines.clear();
                 if (data != null && !data.isEmpty()) {
-                    String[] restoredLines = data.split("\n", -1);
-                    lines.clear();
-                    for (String line : restoredLines) {
-                        lines.add(line);
-                    }
-                } else {
-                    lines.clear();
+                    String[] restored = data.split("\n", -1);
+                    Collections.addAll(lines, restored);
                 }
-                System.out.println("Undo berhasil: Mengembalikan dokumen sebelum load");
+                System.out.println("Redo berhasil: Memuat ulang dokumen.");
                 break;
-
             case "clear":
                 if (data != null && !data.isEmpty()) {
                     String[] restoredLines = data.split("\n");

@@ -179,27 +179,31 @@ public class MainV2 {
     }
 
     static void printWelcome() {
-        System.out.println("\n============================================");
-        System.out.println("          TEXT EDITOR - CLI VERSION          ");
-        System.out.println("============================================");
+        System.out.println("\n┌────────────────────────────────────────────────────────────────────────┐");
+        System.out.println("│                         TEXT EDITOR - CLI VERSION                      │");
+        System.out.println("└────────────────────────────────────────────────────────────────────────┘");
     }
+    
+
 
     static void printHelp() {
-        System.out.println("\n========== PERINTAH ==========");
-        System.out.println("append <teks>           - Tambah baris di akhir");
-        System.out.println("insert <baris> <teks>   - Sisipkan di nomor baris");
-        System.out.println("delete <baris>          - Hapus baris");
-        System.out.println("show                    - Tampilkan semua baris");
-        System.out.println("undo                    - Batalkan operasi terakhir");
-        System.out.println("redo                    - Ulangi operasi yang dibatalkan");
-        System.out.println("clear                   - Hapus semua baris");
-        System.out.println("copy <baris>            - Salin baris ke clipboard");
-        System.out.println("paste <baris>           - Tempel dari clipboard (FIFO)");
-        System.out.println("clipboard               - Lihat riwayat clipboard");
-        System.out.println("save                    - Simpan ke file");
-        System.out.println("load                    - Muat ke file");
-        System.out.println("help                    - Tampilkan menu ini");
-        System.out.println("exit                    - Keluar dari program");
-        System.out.println("==============================");
+        System.out.println("\n┌──────────────────────────── COMMAND LIST ───────────────────────────────┐");
+        System.out.println("│ append <teks>            → Tambah baris di akhir                        │");
+        System.out.println("│ insert <baris> <teks>    → Sisipkan teks di nomor baris                 │");
+        System.out.println("│ delete <baris>           → Hapus baris                                  │");
+        System.out.println("│ show                     → Tampilkan semua baris                        │");
+        System.out.println("│ undo                     → Batalkan operasi terakhir                    │");
+        System.out.println("│ redo                     → Ulangi operasi yang dibatalkan               │");
+        System.out.println("│ clear                    → Hapus semua baris                            │");
+        System.out.println("│ copy <baris>             → Salin baris ke clipboard                     │");
+        System.out.println("│ paste <baris>            → Tempel dari clipboard (FIFO)                 │");
+        System.out.println("│ clipboard                → Lihat isi clipboard                          │");
+        System.out.println("│ save                     → Simpan ke file                               │");
+        System.out.println("│ load                     → Muat file ke editor                          │");
+        System.out.println("│ help                     → Tampilkan daftar perintah                    │");
+        System.out.println("│ exit                     → Keluar dari program                          │");
+        System.out.println("└─────────────────────────────────────────────────────────────────────────┘");
     }
+    
+
 }
