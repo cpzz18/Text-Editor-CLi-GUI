@@ -134,7 +134,7 @@ public class TextEditorGUI extends JFrame {
         undoStack.push(currentState);
 
         Command cmd = redoStack.pop();
-        restorSnapshot(cmd);
+        restoreSnapshot(cmd);
 
         JOptionPane.showMessageDialog(this,
                 "Redo berhasil: " + cmd.getAction(),
