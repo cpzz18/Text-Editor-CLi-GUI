@@ -1,4 +1,4 @@
-# Proyek Editor Teks - Implementasi Struktur Data
+ # Proyek Editor Teks - Implementasi Struktur Data
 
 **Mata Kuliah:** Algoritma dan Pemrograman  
 **Topik:** Stack, LinkedList, dan Queue
